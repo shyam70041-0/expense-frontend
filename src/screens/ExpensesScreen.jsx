@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getExpenses } from "../api";
-import ExpenseItem from "../components/Expenseitem";
+//import ExpenseItem from "../components/Expenseitem";
+import ExpenseItem from "../components/ExpenseItem";
+
 import "../App.css";
 
 export default function ExpensesScreen() {
