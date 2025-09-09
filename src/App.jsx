@@ -1,15 +1,27 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+// frontend/src/App.jsx
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import ExpensesScreen from "./screens/ExpensesScreen";
 import AddExpenseScreen from "./screens/AddExpenseScreen";
-import "./App.css"
+import "./App.css";
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<ExpensesScreen />} />
-        <Route path="/add" element={<AddExpenseScreen />} />
-      </Routes>
-    </BrowserRouter>
+    <Router>
+      <div className="navbar">
+        <h1>Expense Tracker</h1>
+        <div className="links">
+          <Link to="/">Expenses</Link>
+          <Link to="/add">Add Expense</Link>
+        </div>
+      </div>
+
+      <div className="expenses-container">
+        <Routes>
+          <Route path="/" element={<ExpensesScreen />} />
+          <Route path="/add" element={<AddExpenseScreen />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }

@@ -1,42 +1,69 @@
+// frontend/src/screens/AddExpenseScreen.jsx
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { addExpense } from "../api";
+import "../App.css";
 
 export default function AddExpenseScreen() {
-  const [form, setForm] = useState({ title: "", amount: "", category: "Food" });
+  const navigate = useNavigate();
+  const [title, setTitle] = useState("");
+  const [amount, setAmount] = useState("");
+  const [category, setCategory] = useState("Food");
+  const [date, setDate] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    if (!title.trim()) return setError("Title cannot be empty");
+    if (!(Number(amount) > 0)) return setError("Amount must be > 0");
+
     try {
-      await addExpense(form);
-      alert("Expense added!");
+      await addExpense({
+        title: title.trim(),
+        amount: Number(amount),
+        category,
+        date: date ? new Date(date).toISOString() : new Date().toISOString(),
+      });
+      navigate("/");
     } catch (err) {
-      console.error("Error adding expense:", err);
+      console.error(err);
+      setError("Failed to save expense");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        placeholder="Title"
-        value={form.title}
-        onChange={(e) => setForm({ ...form, title: e.target.value })}
-      />
-      <input
-        type="number"
-        placeholder="Amount"
-        value={form.amount}
-        onChange={(e) => setForm({ ...form, amount: e.target.value })}
-      />
-      <select
-        value={form.category}
-        onChange={(e) => setForm({ ...form, category: e.target.value })}
-      >
-        <option>Food</option>
-        <option>Travel</option>
-        <option>Utilities</option>
-        <option>Other</option>
-      </select>
-      <button type="submit">Add Expense</button>
-    </form>
+    <div className="form-container">
+      <h2>Add Expense</h2>
+      {error && <p className="error">{error}</p>}
+      <form className="expense-form" onSubmit={handleSubmit}>
+        <label>
+          Title
+          <input value={title} onChange={(e) => setTitle(e.target.value)} />
+        </label>
+
+        <label>
+          Amount (₹)
+          <input type="number" step="0.01" value={amount} onChange={(e) => setAmount(e.target.value)} />
+        </label>
+
+        <label>
+          Category
+          <select value={category} onChange={(e) => setCategory(e.target.value)}>
+            <option>Food</option>
+            <option>Travel</option>
+            <option>Utilities</option>
+            <option>Other</option>
+          </select>
+        </label>
+
+        <label>
+          Date (optional)
+          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+        </label>
+
+        <button className="btn-primary" type="submit">Save Expense</button>
+      </form>
+    </div>
   );
 }
