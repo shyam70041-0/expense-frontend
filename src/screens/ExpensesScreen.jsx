@@ -1,33 +1,42 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getExpenses } from "../api";
-// import ExpenseItem from "../components/ExpenseItem";
 import ExpenseItem from "../components/Expenseitem";
-import SummaryCard from "../components/SummaryCard";
-import { useNavigate } from "react-router-dom";
+import "../App.css";
 
 export default function ExpensesScreen() {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    getExpenses().then((res) => {
-      setExpenses(res.data);
-      setLoading(false);
-    });
+    const fetchExpenses = async () => {
+      try {
+        const res = await getExpenses();
+        console.log("API response:", res.data);
+        setExpenses(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
+        console.error("Error fetching expenses:", err);
+        setExpenses([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchExpenses();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-
   return (
-    <div>
-      <SummaryCard expenses={expenses} />
-      <button onClick={() => navigate("/add")}>Add Expense</button>
-      <div>
-        {expenses.map((e) => (
-          <ExpenseItem key={e._id} expense={e} />
-        ))}
-      </div>
+    <div className="expenses-screen">
+      <h1 className="heading">Expenses</h1>
+      {loading ? (
+        <p>Loading...</p>
+      ) : expenses.length === 0 ? (
+        <p>No expenses found</p>
+      ) : (
+        <div className="expenses-list">
+          {expenses.map((exp) => (
+            <ExpenseItem key={exp._id || exp.id} expense={exp} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

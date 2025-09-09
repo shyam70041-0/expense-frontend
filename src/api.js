@@ -1,7 +1,13 @@
 import axios from "axios";
 
-// Agar backend localhost pe run ho raha hai
-const API = axios.create({ baseURL: "http://localhost:4000/api" });
+
+
+const API = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:4000/api",
+});
+
+export default API;
+
 
 export const getExpenses = () => API.get("/expenses");
 export const addExpense = (data) => API.post("/expenses", data);
