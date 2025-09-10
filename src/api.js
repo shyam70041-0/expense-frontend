@@ -1,4 +1,3 @@
-// frontend/src/api.js
 import axios from "axios";
 
 const base = import.meta.env.VITE_API_URL ?? "http://localhost:4000/api";
@@ -6,5 +5,5 @@ const base = import.meta.env.VITE_API_URL ?? "http://localhost:4000/api";
 const API = axios.create({ baseURL: base });
 
 export default API;
-export const getExpenses = () => API.get("/expenses");
+export const getExpenses = () => API.get("/expenses"); // automatically /api/expenses
 export const addExpense = (data) => API.post("/expenses", data);
