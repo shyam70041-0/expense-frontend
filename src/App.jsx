@@ -5,6 +5,10 @@ import ExpensesScreen from "./screens/ExpensesScreen";
 import AddExpenseScreen from "./screens/AddExpenseScreen";
 import "./App.css";
 
+
+console.log("Backend URL:", import.meta.env.VITE_API_URL);
+
+
 export default function App() {
   return (
     <Router>
